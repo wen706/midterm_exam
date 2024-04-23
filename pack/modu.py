@@ -10,6 +10,13 @@ books_json='books.json'
 
 
 def 創建():
+    '''
+    創建db
+    '''
+    if not os.path.exists(users_csv):
+        raise FileNotFoundError("users.csv不存在,無法進行初始化")
+    if not os.path.exists(books_json):
+        raise FileNotFoundError("books.json不存在,無法進行初始化")
     conn = sqlite3.connect(sql)#建立資料庫
 
     c = conn.cursor()
@@ -51,10 +58,12 @@ def 創建():
 
 
 def 偵測():
-    if os.path.exists('library.db'):
-        print("檔案存在。")
-    else:
+    '''
+    偵測db存不存在
+    '''
+    if not os.path.exists('library.db'):
         創建()
+
 
 def 登入()->bool:
     '''
@@ -72,6 +81,9 @@ def 登入()->bool:
     
 
 def 選單():
+    '''
+    顯示功能選單
+    '''
     print()
     print("-"*20)
     print("    資料表 CRUD")
@@ -85,16 +97,24 @@ def 選單():
 
 
 def 對齊(目標字串,對齊數字):
-    '''為了讓中文字能正常對齊'''
+    '''
+    為了讓中文字能正常對齊
+    '''
     count = 0
     for char in 目標字串:
-        # 中文 Unicode 範圍是 [\u4e00-\u9fa5]
+        # 中文 
         if '\u4e00' <= char <= '\u9fa5':
+            count += 1
+        #全形標點符號
+        elif '\u3000' <= char <= '\u303F':
             count += 1
     return 目標字串.ljust(對齊數字-count)
 
 
 def 顯示書籍(SELECT=None,printmod=True):
+    '''
+    搜尋(預設全部),顯示(預設是開)
+    '''
     conn=sqlite3.connect(sql)
     c = conn.cursor()
     if SELECT is None:
@@ -102,18 +122,21 @@ def 顯示書籍(SELECT=None,printmod=True):
     else:
         c.execute(f"SELECT title,author,publisher,year FROM books WHERE title like '%{SELECT}%' or author like '%{SELECT}%'")
     if printmod:
-        print('|{:^9s}|{:^12s}|{:^15s}|{:^9s}|'.format('title','author','publisher','year'))    
+        print("|　　　　書名　　　　|　　　　作者　　　　|　　　出版社　　　　| 年份 |")    
         for book in c.fetchall():
-            title= 對齊(book[0],9)
-            author=對齊(book[1],12)
-            publisher=對齊(book[2],15)
-            year=對齊(str(book[3]),9)
+            title= 對齊(book[0],20)
+            author=對齊(book[1],20)
+            publisher=對齊(book[2],20)
+            year=對齊(str(book[3]),6)
             print(f"|{title}|{author}|{publisher}|{year}|")
     return len(c.fetchall())
 
 
 
 def 增加記錄():
+    '''
+    增加記錄
+    '''
     title=input("請輸入要新增的標題：")
     author=input("請輸入要新增的作者：")
     publisher=input("請輸入要新增的出版社：")
@@ -134,6 +157,9 @@ def 增加記錄():
 
 
 def 刪除紀錄():
+    '''
+    刪除紀錄
+    '''
     顯示書籍()
     book=input("請問要刪除哪一本書？：")
     conn=sqlite3.connect(sql)
@@ -151,11 +177,17 @@ def 刪除紀錄():
 
 
 def 查詢():
+    '''
+    查詢
+    '''
     book=input("請輸入想查詢的關鍵字：")
     顯示書籍(book)
     
 
 def 修改紀錄():
+    '''
+    修改紀錄
+    '''
     顯示書籍()
     book=input("請問要修改哪一本書的標題？：")
     title=input("請輸入要更改的標題：")

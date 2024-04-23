@@ -1,11 +1,10 @@
 import pack.modu as lib
 
-lib.顯示書籍()
 lib.偵測()
 while True:
-    break
     if lib.登入()==True:
         break
+    
 while True:
     lib.選單()
     cmd=input("選擇要執行的功能(Enter離開)：")
