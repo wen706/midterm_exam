@@ -104,11 +104,13 @@ def 對齊(目標字串,對齊數字):
     for char in 目標字串:
         # 中文 
         if '\u4e00' <= char <= '\u9fa5':
-            count += 1
+            count += 2
         #全形標點符號
         elif '\u3000' <= char <= '\u303F':
+            count += 2
+        else:
             count += 1
-    return 目標字串.ljust(對齊數字-count)
+    return 目標字串+' '*((對齊數字-count)%2)+'　'*((對齊數字-count)//2)
 
 
 def 顯示書籍(SELECT=None,printmod=True):
