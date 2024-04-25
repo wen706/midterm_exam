@@ -124,13 +124,15 @@ def 顯示書籍(SELECT=None,printmod=True):
     else:
         c.execute(f"SELECT title,author,publisher,year FROM books WHERE title like '%{SELECT}%' or author like '%{SELECT}%'")
     if printmod:
-        print("|　　　　書名　　　　|　　　　作者　　　　|　　　出版社　　　　| 年份 |")    
+        print(f"|{'書名':　^10}|{'作者':　^10}|{'出版社':　^10}|{'年份':^4}|")    
         for book in c.fetchall():
             title= 對齊(book[0],20)
             author=對齊(book[1],20)
             publisher=對齊(book[2],20)
             year=對齊(str(book[3]),6)
             print(f"|{title}|{author}|{publisher}|{year}|")
+            #如果沒建立對齊
+            #print(f"|{book[0]:　^10}|{book[1]:　^10}|{book[2]:　^10}|{str(book[3]):^4}|") 
     return len(c.fetchall())
 
 
